@@ -33,7 +33,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
     @Override
     public Item save(Item item) {
         String sql = "insert into item(item_name, price, quantity) values (?,?,?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        KeyHolder keyHolder = new GeneratedKeyHolder();//KeyHolder 와 connection.prepareStatement(sql, new String[]{"id"}) 를 사용해서 id 를 지정해주면 INSERT 쿼리 실행 이후에 데이터베이스에서 생성된 ID 값을 조회할 수 있다.
         template.update(connection -> {
             //자동 증가 키
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -75,7 +75,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
         Integer maxPrice = cond.getMaxPrice();
 
         String sql = "select id, item_name, price, quantity from item";
-        //동적 쿼리
+        //동적 쿼리 (Jdbc template findAll의 단점 -> 복잡함)
         if (StringUtils.hasText(itemName) || maxPrice != null) {
             sql += " where";
         }

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
-@Configuration
+@Configuration//설정을 의미한다
 @RequiredArgsConstructor
 public class JdbcTemplateV1Config {
 
@@ -24,7 +24,7 @@ public class JdbcTemplateV1Config {
 
     @Bean
     public ItemRepository itemRepository() {
-        return new JdbcTemplateItemRepositoryV1(dataSource);
+        return new JdbcTemplateItemRepositoryV1(dataSource);//JdbcTemplate을 사용하도록 설정
     }
 
 }
