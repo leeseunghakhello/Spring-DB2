@@ -80,7 +80,7 @@ class ItemRepositoryTest {
     }
 
     @Test
-    void findItems() {
+    void findItems() { //DB에 데이터가 없다고 가정하고 테스트하는데 저장된 데이터가 있으면 오류를 내뿜는다.
         //given
         Item item1 = new Item("itemA-1", 10000, 10);
         Item item2 = new Item("itemA-2", 20000, 20);
