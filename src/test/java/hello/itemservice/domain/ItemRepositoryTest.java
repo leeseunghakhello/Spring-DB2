@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @Slf4j
-@Transactional
+@Transactional//@Transactional 이 테스트에 있으면 스프링은 테스트를 트랜잭션 안에서 실행하고, 테스트가 끝나면 트랜잭션을 자동으로 롤백시켜 버린다! -> 걍 이거 하나면 된다.
 @SpringBootTest
 class ItemRepositoryTest {
 
@@ -44,10 +44,11 @@ class ItemRepositoryTest {
         if (itemRepository instanceof MemoryItemRepository) {
             ((MemoryItemRepository) itemRepository).clearStore();
         }
-        //트랜잭션 롤백
+        //트랜잭션 롤백 -> 이렇게 함으로써 다른 테스트에 영향을 안주게 된다 -> 이렇게 하면 db에 데이터가 쌓이지 않기 때문에 다음 테스트에 영향을 주지 않게 된다.
         //transactionManager.rollback(status);
     }
 
+    //@Commit//이걸 붙혀주면 롤백 안시키고 데이터가 들어갔는지 확인할 수 있다.
     @Test
     void save() {
         //given

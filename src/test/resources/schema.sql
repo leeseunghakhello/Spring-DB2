@@ -7,3 +7,4 @@ create table item
     quantity  integer,
     primary key (id)
 );
+/*메모리 디비에 테이블 만든 작업
