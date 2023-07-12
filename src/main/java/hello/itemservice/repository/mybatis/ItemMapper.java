@@ -1,4 +1,4 @@
-package hello.itemservice.repository.mybatis;
+package hello.itemservice.repository.mybatis;//이 파일 경로를 그대로 xml파일명으로 만들어줘야함
 
 import hello.itemservice.domain.Item;
 import hello.itemservice.repository.ItemSearchCond;
@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 import java.util.Optional;
 
-@Mapper
+@Mapper//ItemMapper.xml파일 필요함
 public interface ItemMapper {
 
     void save(Item item);
