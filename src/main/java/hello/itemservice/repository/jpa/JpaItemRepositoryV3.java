@@ -24,7 +24,7 @@ import static hello.itemservice.domain.QItem.*;
 public class JpaItemRepositoryV3 implements ItemRepository {
 
     private final EntityManager em;
-    private final JPAQueryFactory query;
+    private final JPAQueryFactory query;//쿼리 dsl을 사용하려면 이게 있어야함.
 
     public JpaItemRepositoryV3(EntityManager em) {
         this.em = em;
@@ -51,13 +51,14 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         return Optional.ofNullable(item);
     }
 
+    //쿼리디에스엘 -> 이거는 옛날 버전...바로 밑에 findAll이 최신버전
     public List<Item> findAllOld(ItemSearchCond cond) {
 
         String itemName = cond.getItemName();
         Integer maxPrice = cond.getMaxPrice();
 
-        QItem item = QItem.item;
-        BooleanBuilder builder = new BooleanBuilder();
+        QItem item = QItem.item;//검증 했을때 QItem이 깔려있으면 설정됐던거 그거임
+        BooleanBuilder builder = new BooleanBuilder();//동적 쿼리에서 조건을 담아줄 라이브러리
         if (StringUtils.hasText(itemName)) {
             builder.and(item.itemName.like("%" + itemName + "%"));
         }
@@ -68,12 +69,20 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         List<Item> result = query
                 .select(item)
                 .from(item)
-                .where(builder)
+                .where(builder)//조건
                 .fetch();
+
+        //QItem item = QItem.item;를 생략하고 QItem에 속성이 있어서 이런식으로도 표현가능
+//          List<Item> result=query
+//                  .select(QItem.item)
+//                  .from(QItem.item)
+//                  .where(builder)
+//                  .fetch(); ->
 
         return result;
     }
 
+    //쿼리디에스엘 -> 이게 최신버전 쿼리디에스엘
     @Override
     public List<Item> findAll(ItemSearchCond cond) {
 
@@ -83,10 +92,11 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         return query
                 .select(item)
                 .from(item)
-                .where(likeItemName(itemName), maxPrice(maxPrice))
+                .where(likeItemName(itemName), maxPrice(maxPrice))//동적 쿼리문
                 .fetch();
     }
 
+    //위에 findAll에 사용될(동적 쿼리)
     private BooleanExpression likeItemName(String itemName) {
         if (StringUtils.hasText(itemName)) {
             return item.itemName.like("%" + itemName + "%");
@@ -94,6 +104,7 @@ public class JpaItemRepositoryV3 implements ItemRepository {
         return null;
     }
 
+    //위에 findAll에 사용됨(동적 쿼리)
     private BooleanExpression maxPrice(Integer maxPrice) {
         if (maxPrice != null) {
             return item.price.loe(maxPrice);
